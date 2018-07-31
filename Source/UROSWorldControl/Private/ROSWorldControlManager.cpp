@@ -34,7 +34,7 @@ void ROSWorldControlManager::ConnectToROSBridge(FWebsocketInfoCallBack CustomErr
 
 	// Set websocket server address to ws 
 	Handler = MakeShareable<FROSBridgeHandler>(
-		new FROSBridgeHandler(ServerAdress, ServerPort, CustomErrorCallbacks, CustomConnectedCallbacks));
+		new FROSBridgeHandler(ServerAdress, ServerPort, CustomErrorCallbacks, CustomConnectedCallbacks, ESerializationMode::MODE_BSON));
 
 	// Add servers
 

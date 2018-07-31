@@ -32,5 +32,8 @@
      },{
        "Name": "UUTils",
        "Enabled": true
+     },{
+       "Name": "UE4Bson",
+       "Enabled": true
      }]
 }

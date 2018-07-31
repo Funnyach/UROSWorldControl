@@ -46,7 +46,7 @@ public class UROSWorldControlEd : ModuleRules
 				"LevelEditor",
 				// ... add private dependencies that you statically link with here ...	
 			}
-			);
+            );
 		
 		
 		DynamicallyLoadedModuleNames.AddRange(

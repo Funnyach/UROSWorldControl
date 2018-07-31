@@ -1,21 +1,18 @@
 #pragma once
+
 #include "ROSBridgeSrv.h"
-#include "Pose.h"
-#include "Tag.h"
-#include "PhysicsProperties.h"
 
-
+#include "geometry_msgs/Pose.h"
+#include "world_control_msgs/msgs/Tag.h"
+#include "world_control_msgs/msgs/PhysicsProperties.h"
 
 
 class UROSBRIDGE_API FROSSpawnModelSrv : public FROSBridgeSrv
 {
-protected:
-	FString Type;
-
 public:
-	FROSSpawnModelSrv(FString InType)
+	FROSSpawnModelSrv()
 	{
-		Type = InType;
+		SrvType = TEXT("world_control_msgs/SpawnModel");
 	}
 
 	class Request : public SrvRequest
@@ -31,224 +28,300 @@ public:
 		TArray<FString> MaterialNames;
 		TArray<FString> MaterialPaths;
 		FString ParentId;
-
-
+					
 	public:
-		Request() {}
-
-		Request(FString InName, geometry_msgs::Pose InPose, FString InId, TArray<world_control_msgs::Tag> InTags, FString InPath, FString InActorLabel, world_control_msgs::PhysicsProperties InPhysicsProperties, TArray<FString> InMaterialNames, TArray<FString> InMaterialPaths, FString InParentId)
-		{
-			Name = InName;
-			Pose = InPose;
-			Id = InId;
-			Tags = InTags;
-			Path = InPath;
-			ActorLabel = InActorLabel;
-			PhysicsProperties = InPhysicsProperties;
-			MaterialNames = InMaterialNames;
-			MaterialPaths = InMaterialPaths;
-			ParentId = InParentId;
-		}
-
-		FString GetName()
-		{
-			return Name;
-		}
-
-		geometry_msgs::Pose GetPose()
-		{
-			return Pose;
-		}
-
-		FString GetId()
-		{
-			return Id;
-		}
-
-		TArray<world_control_msgs::Tag> GetTags()
-		{
-			return Tags;
-		}
-
-		FString GetPath()
-		{
-			return Path;
-		}
-
-		FString GetActorLabel()
-		{
-			return ActorLabel;
-		}
-
-		world_control_msgs::PhysicsProperties GetPhysicsProperties()
-		{
-			return PhysicsProperties;
-		}
-
-		TArray<FString> GetMaterialNames()
-		{
-			return MaterialNames;
-		}
-
-		TArray<FString> GetMaterialPaths()
-		{
-			return MaterialPaths;
-		}
-
-		FString GetParentId()
-		{
-			return ParentId;
-		}
-
+		Request(){ }
+		Request(FString InName,
+			geometry_msgs::Pose InPose,
+			FString InId,
+			TArray<world_control_msgs::Tag> InTags,
+			FString InPath,
+			FString InActorLabel,
+			world_control_msgs::PhysicsProperties InPhysicsProperties,
+			TArray<FString> InMaterialNames,
+			TArray<FString> InMaterialPaths,
+			FString InParentId)
+			:
+			Name(InName),
+			Pose(InPose),
+			Id(InId),
+			Tags(InTags),
+			Path(InPath),
+			ActorLabel(InActorLabel),
+			PhysicsProperties(InPhysicsProperties),
+			MaterialNames(InMaterialNames),
+			MaterialPaths(InMaterialPaths),
+			ParentId(InParentId) { }
+			
+			
+		// Getters 
+		FString GetName() const { return Name; }
+		geometry_msgs::Pose GetPose() const { return Pose; }
+		FString GetId() const { return Id; }
+		TArray<world_control_msgs::Tag> GetTags() const { return Tags; }
+		FString GetPath() const { return Path; }
+		FString GetActorLabel() const { return ActorLabel; }
+		world_control_msgs::PhysicsProperties GetPhysicsProperties() const { return PhysicsProperties; }
+		TArray<FString> GetMaterialNames() const { return MaterialNames; }
+		TArray<FString> GetMaterialPaths() const { return MaterialPaths; }
+		FString GetParentId() const { return ParentId; }
+			
+			
+		// Setters 
+		void SetName(FString InName) { Name = InName; }
+		void SetPose(geometry_msgs::Pose InPose) { Pose = InPose; }
+		void SetId(FString InId) { Id = InId; }
+		void SetTags(TArray<world_control_msgs::Tag> InTags) { Tags = InTags; }
+		void SetPath(FString InPath) { Path = InPath; }
+		void SetActorLabel(FString InActorLabel) { ActorLabel = InActorLabel; }
+		void SetPhysicsProperties(world_control_msgs::PhysicsProperties InPhysicsProperties) { PhysicsProperties = InPhysicsProperties; }
+		void SetMaterialNames(TArray<FString> InMaterialNames) { MaterialNames = InMaterialNames; }
+		void SetMaterialPaths(TArray<FString> InMaterialPaths) { MaterialPaths = InMaterialPaths; }
+		void SetParentId(FString InParentId) { ParentId = InParentId; }
+			
 		virtual void FromJson(TSharedPtr<FJsonObject> JsonObject) override
 		{
-			Name = JsonObject->GetStringField("name");
-			Pose.FromJson(JsonObject->GetObjectField("pose"));
-			Id = JsonObject->GetStringField("id");
-			Tags.Empty();
-			TArray<TSharedPtr<FJsonValue>> TagsPtrArray = JsonObject->GetArrayField(TEXT("tags"));
-			for (auto &ptr : TagsPtrArray)
-			{
-				world_control_msgs::Tag Entry;
-				Entry.FromJson(ptr->AsObject());
-				Tags.Add(Entry);
-			}
+			TArray<TSharedPtr<FJsonValue>> ValuesPtrArr;
 
-			Path = JsonObject->GetStringField("path");
-			ActorLabel = JsonObject->GetStringField("actor_label");
-			PhysicsProperties.FromJson(JsonObject->GetObjectField("physics_properties"));
+			Name = JsonObject->GetStringField(TEXT("name"));
+
+			Pose = geometry_msgs::Pose::GetFromJson(JsonObject->GetObjectField(TEXT("pose")));
+
+			Id = JsonObject->GetStringField(TEXT("id"));
+
+			Tags.Empty();
+			ValuesPtrArr = JsonObject->GetArrayField(TEXT("tags"));
+			for (auto &ptr : ValuesPtrArr)
+				Tags.Add(world_control_msgs::Tag::GetFromJson(ptr->AsObject()));
+
+			Path = JsonObject->GetStringField(TEXT("path"));
+
+			ActorLabel = JsonObject->GetStringField(TEXT("actor_label"));
+
+			PhysicsProperties = world_control_msgs::PhysicsProperties::GetFromJson(JsonObject->GetObjectField(TEXT("physics_properties")));
+
 			MaterialNames.Empty();
-			TArray<TSharedPtr<FJsonValue>> MaterialNamesPtrArray = JsonObject->GetArrayField(TEXT("material_names"));
-			for (auto &ptr : MaterialNamesPtrArray)
-			{
-				FString Entry = ptr->AsString();
-				MaterialNames.Add(Entry);
-			}
+			ValuesPtrArr = JsonObject->GetArrayField(TEXT("material_names"));
+			for (auto &ptr : ValuesPtrArr)
+				MaterialNames.Add(ptr->AsString());
 
 			MaterialPaths.Empty();
-			TArray<TSharedPtr<FJsonValue>> MaterialPathsPtrArray = JsonObject->GetArrayField(TEXT("material_paths"));
-			for (auto &ptr : MaterialPathsPtrArray)
-			{
-				FString Entry = ptr->AsString();
-				MaterialPaths.Add(Entry);
-			}
+			ValuesPtrArr = JsonObject->GetArrayField(TEXT("material_paths"));
+			for (auto &ptr : ValuesPtrArr)
+				MaterialPaths.Add(ptr->AsString());
 
-			ParentId = JsonObject->GetStringField("parent_id");
+			ParentId = JsonObject->GetStringField(TEXT("parent_id"));
+
 		}
+			
+		virtual void FromBson(TSharedPtr<FBsonObject> BsonObject) override
+		{
+			TArray<TSharedPtr<FBsonValue>> ValuesPtrArr;
 
+			Name = BsonObject->GetStringField(TEXT("name"));
+
+			Pose = geometry_msgs::Pose::GetFromBson(BsonObject->GetObjectField(TEXT("pose")));
+
+			Id = BsonObject->GetStringField(TEXT("id"));
+
+			Tags.Empty();
+			ValuesPtrArr = BsonObject->GetArrayField(TEXT("tags"));
+			for (auto &ptr : ValuesPtrArr)
+				Tags.Add(world_control_msgs::Tag::GetFromBson(ptr->AsObject()));
+
+			Path = BsonObject->GetStringField(TEXT("path"));
+
+			ActorLabel = BsonObject->GetStringField(TEXT("actor_label"));
+
+			PhysicsProperties = world_control_msgs::PhysicsProperties::GetFromBson(BsonObject->GetObjectField(TEXT("physics_properties")));
+
+			MaterialNames.Empty();
+			ValuesPtrArr = BsonObject->GetArrayField(TEXT("material_names"));
+			for (auto &ptr : ValuesPtrArr)
+				MaterialNames.Add(ptr->AsString());
+
+			MaterialPaths.Empty();
+			ValuesPtrArr = BsonObject->GetArrayField(TEXT("material_paths"));
+			for (auto &ptr : ValuesPtrArr)
+				MaterialPaths.Add(ptr->AsString());
+
+			ParentId = BsonObject->GetStringField(TEXT("parent_id"));
+
+		}
+			
 		static Request GetFromJson(TSharedPtr<FJsonObject> JsonObject)
 		{
 			Request Req;
 			Req.FromJson(JsonObject);
 			return Req;
 		}
-
-		FString ToString() const override
+			
+		static Request GetFromBson(TSharedPtr<FBsonObject> BsonObject)
 		{
-			return "FROSSpawnModelSrv:Request {name = " + Name +
-				", pose = " + Pose.ToString() +
-				", id = " + Id +
-				", tags size = " + FString::FromInt(Tags.Num()) +
-				", path = " + Path +
-				", actor_label = " + ActorLabel +
-				", physics_properties = " + PhysicsProperties.ToString() +
-				", material_names size = " + FString::FromInt(MaterialNames.Num()) +
-				", material_paths size = " + FString::FromInt(MaterialPaths.Num()) +
-				", parent_id = " + ParentId + "}";
+			Request Req;
+			Req.FromBson(BsonObject);
+			return Req;
 		}
-
-		virtual TSharedPtr<FJsonObject> ToJsonObject() const override
+			
+//			### TOSTRING ###
+			
+		virtual TSharedPtr<FJsonObject> ToJsonObject() const
 		{
 			TSharedPtr<FJsonObject> Object = MakeShareable<FJsonObject>(new FJsonObject());
+
 			Object->SetStringField(TEXT("name"), Name);
+
 			Object->SetObjectField(TEXT("pose"), Pose.ToJsonObject());
+
 			Object->SetStringField(TEXT("id"), Id);
-			TArray<TSharedPtr<FJsonValue>> TagsPtrArray;
-			for (auto &Entry : Tags)
-			{
-				TSharedPtr<FJsonValue> Ptr = MakeShareable(new FJsonValueObject(Entry.ToJsonObject()));
-				TagsPtrArray.Add(Ptr);
-			}
-			Object->SetArrayField("tags", TagsPtrArray);
+
+			TArray<TSharedPtr<FJsonValue>> TagsArray;
+			for (auto &val : Tags)
+				TagsArray.Add(MakeShareable(new FJsonValueObject(val.ToJsonObject())));
+			Object->SetArrayField(TEXT("tags"), TagsArray);
 
 			Object->SetStringField(TEXT("path"), Path);
-			Object->SetStringField(TEXT("actor_label"), ActorLabel);
-			Object->SetObjectField(TEXT("physics_properties"), PhysicsProperties.ToJsonObject());
-			TArray<TSharedPtr<FJsonValue>> MaterialNamesPtrArray;
-			for (auto &Entry : MaterialNames)
-			{
-				TSharedPtr<FJsonValue> Ptr = MakeShareable(new FJsonValueString(Entry));
-				MaterialNamesPtrArray.Add(Ptr);
-			}
-			Object->SetArrayField("material_names", MaterialNamesPtrArray);
 
-			TArray<TSharedPtr<FJsonValue>> MaterialPathsPtrArray;
-			for (auto &Entry : MaterialPaths)
-			{
-				TSharedPtr<FJsonValue> Ptr = MakeShareable(new FJsonValueString(Entry));
-				MaterialPathsPtrArray.Add(Ptr);
-			}
-			Object->SetArrayField("material_paths", MaterialPathsPtrArray);
+			Object->SetStringField(TEXT("actor_label"), ActorLabel);
+
+			Object->SetObjectField(TEXT("physics_properties"), PhysicsProperties.ToJsonObject());
+
+			TArray<TSharedPtr<FJsonValue>> MaterialNamesArray;
+			for (auto &val : MaterialNames)
+				MaterialNamesArray.Add(MakeShareable(new FJsonValueString(val)));
+			Object->SetArrayField(TEXT("material_names"), MaterialNamesArray);
+
+			TArray<TSharedPtr<FJsonValue>> MaterialPathsArray;
+			for (auto &val : MaterialPaths)
+				MaterialPathsArray.Add(MakeShareable(new FJsonValueString(val)));
+			Object->SetArrayField(TEXT("material_paths"), MaterialPathsArray);
 
 			Object->SetStringField(TEXT("parent_id"), ParentId);
+
 			return Object;
+
 		}
+			
+		virtual TSharedPtr<FBsonObject> ToBsonObject() const
+		{
+			TSharedPtr<FBsonObject> Object = MakeShareable<FBsonObject>(new FBsonObject());
 
+			Object->SetStringField(TEXT("name"), Name);
+
+			Object->SetObjectField(TEXT("pose"), Pose.ToBsonObject());
+
+			Object->SetStringField(TEXT("id"), Id);
+
+			TArray<TSharedPtr<FBsonValue>> TagsArray;
+			for (auto &val : Tags)
+				TagsArray.Add(MakeShareable(new FBsonValueObject(val.ToBsonObject())));
+			Object->SetArrayField(TEXT("tags"), TagsArray);
+
+			Object->SetStringField(TEXT("path"), Path);
+
+			Object->SetStringField(TEXT("actor_label"), ActorLabel);
+
+			Object->SetObjectField(TEXT("physics_properties"), PhysicsProperties.ToBsonObject());
+
+			TArray<TSharedPtr<FBsonValue>> MaterialNamesArray;
+			for (auto &val : MaterialNames)
+				MaterialNamesArray.Add(MakeShareable(new FBsonValueString(val)));
+			Object->SetArrayField(TEXT("material_names"), MaterialNamesArray);
+
+			TArray<TSharedPtr<FBsonValue>> MaterialPathsArray;
+			for (auto &val : MaterialPaths)
+				MaterialPathsArray.Add(MakeShareable(new FBsonValueString(val)));
+			Object->SetArrayField(TEXT("material_paths"), MaterialPathsArray);
+
+			Object->SetStringField(TEXT("parent_id"), ParentId);
+
+			return Object;
+
+		}
 	};
-
+		
 	class Response : public SrvResponse
 	{
 	private:
 		FString Id;
 		bool Success;
-
-
+			
+			
 	public:
-		Response() {}
-
-		Response(FString InId, bool InSuccess)
-		{
-			Id = InId;
-			Success = InSuccess;
-		}
-
-		FString GetId()
-		{
-			return Id;
-		}
-
-		bool GetSuccess()
-		{
-			return Success;
-		}
-
+		Response(){ }
+		Response(FString InId,
+			bool InSuccess)
+			:
+			Id(InId),
+			Success(InSuccess) { }
+			
+			
+		// Getters 
+		FString GetId() const { return Id; }
+		bool GetSuccess() const { return Success; }
+			
+			
+		// Setters 
+		void SetId(FString InId) { Id = InId; }
+		void SetSuccess(bool InSuccess) { Success = InSuccess; }
+			
+			
 		virtual void FromJson(TSharedPtr<FJsonObject> JsonObject) override
 		{
-			Id = JsonObject->GetStringField("id");
-			Success = JsonObject->GetBoolField("success");
-		}
+			Id = JsonObject->GetStringField(TEXT("id"));
 
+			Success = JsonObject->GetBoolField(TEXT("success"));
+
+		}
+			
+		virtual void FromBson(TSharedPtr<FBsonObject> BsonObject) override
+		{
+			Id = BsonObject->GetStringField(TEXT("id"));
+
+			Success = BsonObject->GetBoolField(TEXT("success"));
+
+		}
+			
 		static Response GetFromJson(TSharedPtr<FJsonObject> JsonObject)
 		{
-			Response Res;
-			Res.FromJson(JsonObject);
-			return Res;
+			Response Resp;
+			Resp.FromJson(JsonObject);
+			return Resp;
 		}
-
-		FString ToString() const override
+			
+		static Response GetFromBson(TSharedPtr<FBsonObject> BsonObject)
 		{
-			return "FROSSpawnModelSrv:Response {id = " + Id +
-				", success = " + (Success ? FString("True") : FString("False")) + "}";
-		}
-
-		virtual TSharedPtr<FJsonObject> ToJsonObject() const override
+			Response Resp; 
+			Resp.FromBson(BsonObject);
+			return Resp;
+		}			
+			
+//			### TOSTRING ###
+			
+		virtual TSharedPtr<FJsonObject> ToJsonObject() const
 		{
 			TSharedPtr<FJsonObject> Object = MakeShareable<FJsonObject>(new FJsonObject());
+
 			Object->SetStringField(TEXT("id"), Id);
+
 			Object->SetBoolField(TEXT("success"), Success);
+
 			return Object;
+
 		}
+			
+		virtual TSharedPtr<FBsonObject> ToBsonObject() const
+		{
+			TSharedPtr<FBsonObject> Object = MakeShareable<FBsonObject>(new FBsonObject());
 
+			Object->SetStringField(TEXT("id"), Id);
+
+			Object->SetBoolField(TEXT("success"), Success);
+
+			return Object;
+
+		}
 	};
-
+		
 };
+	

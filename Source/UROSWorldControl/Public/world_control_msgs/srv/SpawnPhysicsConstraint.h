@@ -1,20 +1,17 @@
 #pragma once
+
 #include "ROSBridgeSrv.h"
-#include "PhysicsConstraintDetails.h"
-#include "Pose.h"
 
-
+#include "world_control_msgs/msgs/PhysicsConstraintDetails.h"
+#include "geometry_msgs/Pose.h"
 
 
 class UROSBRIDGE_API FROSSpawnPhysicsConstraintSrv : public FROSBridgeSrv
 {
-protected:
-	FString Type;
-
 public:
-	FROSSpawnPhysicsConstraintSrv(FString InType)
+	FROSSpawnPhysicsConstraintSrv()
 	{
-		Type = InType;
+		SrvType = TEXT("world_control_msgs/SpawnPhysicsConstraint");
 	}
 
 	class Request : public SrvRequest
@@ -22,99 +19,150 @@ public:
 	private:
 		world_control_msgs::PhysicsConstraintDetails ConstraintDetails;
 		geometry_msgs::Pose Pose;
-
-
+					
 	public:
-		Request() {}
-
-		Request(world_control_msgs::PhysicsConstraintDetails InConstraintDetails, geometry_msgs::Pose InPose)
-		{
-			ConstraintDetails = InConstraintDetails;
-			Pose = InPose;
-		}
-
-		world_control_msgs::PhysicsConstraintDetails GetConstraintDetails()
-		{
-			return ConstraintDetails;
-		}
-
-		geometry_msgs::Pose GetPose()
-		{
-			return Pose;
-		}
-
+		Request(){ }
+		Request(world_control_msgs::PhysicsConstraintDetails InConstraintDetails,
+			geometry_msgs::Pose InPose)
+			:
+			ConstraintDetails(InConstraintDetails),
+			Pose(InPose) { }
+			
+			
+		// Getters 
+		world_control_msgs::PhysicsConstraintDetails GetConstraintDetails() const { return ConstraintDetails; }
+		geometry_msgs::Pose GetPose() const { return Pose; }
+			
+			
+		// Setters 
+		void SetConstraintDetails(world_control_msgs::PhysicsConstraintDetails InConstraintDetails) { ConstraintDetails = InConstraintDetails; }
+		void SetPose(geometry_msgs::Pose InPose) { Pose = InPose; }
+			
 		virtual void FromJson(TSharedPtr<FJsonObject> JsonObject) override
 		{
-			ConstraintDetails.FromJson(JsonObject->GetObjectField("constraint_details"));
-			Pose.FromJson(JsonObject->GetObjectField("pose"));
-		}
+			ConstraintDetails = world_control_msgs::PhysicsConstraintDetails::GetFromJson(JsonObject->GetObjectField(TEXT("constraint_details")));
 
+			Pose = geometry_msgs::Pose::GetFromJson(JsonObject->GetObjectField(TEXT("pose")));
+
+		}
+			
+		virtual void FromBson(TSharedPtr<FBsonObject> BsonObject) override
+		{
+			ConstraintDetails = world_control_msgs::PhysicsConstraintDetails::GetFromBson(BsonObject->GetObjectField(TEXT("constraint_details")));
+
+			Pose = geometry_msgs::Pose::GetFromBson(BsonObject->GetObjectField(TEXT("pose")));
+
+		}
+			
 		static Request GetFromJson(TSharedPtr<FJsonObject> JsonObject)
 		{
 			Request Req;
 			Req.FromJson(JsonObject);
 			return Req;
 		}
-
-		FString ToString() const override
+			
+		static Request GetFromBson(TSharedPtr<FBsonObject> BsonObject)
 		{
-			return "FROSSpawnPhysicsConstraintSrv:Request {constraint_details = " + ConstraintDetails.ToString() +
-				", pose = " + Pose.ToString() + "}";
+			Request Req;
+			Req.FromBson(BsonObject);
+			return Req;
 		}
-
-		virtual TSharedPtr<FJsonObject> ToJsonObject() const override
+			
+//			### TOSTRING ###
+			
+		virtual TSharedPtr<FJsonObject> ToJsonObject() const
 		{
 			TSharedPtr<FJsonObject> Object = MakeShareable<FJsonObject>(new FJsonObject());
+
 			Object->SetObjectField(TEXT("constraint_details"), ConstraintDetails.ToJsonObject());
+
 			Object->SetObjectField(TEXT("pose"), Pose.ToJsonObject());
+
 			return Object;
+
 		}
+			
+		virtual TSharedPtr<FBsonObject> ToBsonObject() const
+		{
+			TSharedPtr<FBsonObject> Object = MakeShareable<FBsonObject>(new FBsonObject());
 
+			Object->SetObjectField(TEXT("constraint_details"), ConstraintDetails.ToBsonObject());
+
+			Object->SetObjectField(TEXT("pose"), Pose.ToBsonObject());
+
+			return Object;
+
+		}
 	};
-
+		
 	class Response : public SrvResponse
 	{
 	private:
 		bool Success;
-
-
+			
+			
 	public:
-		Response() {}
-
+		Response(){ }
 		Response(bool InSuccess)
-		{
-			Success = InSuccess;
-		}
-
-		bool GetSuccess()
-		{
-			return Success;
-		}
-
+			:
+			Success(InSuccess) { }
+			
+			
+		// Getters 
+		bool GetSuccess() const { return Success; }
+			
+			
+		// Setters 
+		void SetSuccess(bool InSuccess) { Success = InSuccess; }
+			
+			
 		virtual void FromJson(TSharedPtr<FJsonObject> JsonObject) override
 		{
-			Success = JsonObject->GetBoolField("success");
-		}
+			Success = JsonObject->GetBoolField(TEXT("success"));
 
+		}
+			
+		virtual void FromBson(TSharedPtr<FBsonObject> BsonObject) override
+		{
+			Success = BsonObject->GetBoolField(TEXT("success"));
+
+		}
+			
 		static Response GetFromJson(TSharedPtr<FJsonObject> JsonObject)
 		{
-			Response Res;
-			Res.FromJson(JsonObject);
-			return Res;
+			Response Resp;
+			Resp.FromJson(JsonObject);
+			return Resp;
 		}
-
-		FString ToString() const override
+			
+		static Response GetFromBson(TSharedPtr<FBsonObject> BsonObject)
 		{
-			return "FROSSpawnPhysicsConstraintSrv:Response {success = " + (Success ? FString("True") : FString("False")) + "}";
-		}
-
-		virtual TSharedPtr<FJsonObject> ToJsonObject() const override
+			Response Resp; 
+			Resp.FromBson(BsonObject);
+			return Resp;
+		}			
+			
+//			### TOSTRING ###
+			
+		virtual TSharedPtr<FJsonObject> ToJsonObject() const
 		{
 			TSharedPtr<FJsonObject> Object = MakeShareable<FJsonObject>(new FJsonObject());
+
 			Object->SetBoolField(TEXT("success"), Success);
+
 			return Object;
+
 		}
+			
+		virtual TSharedPtr<FBsonObject> ToBsonObject() const
+		{
+			TSharedPtr<FBsonObject> Object = MakeShareable<FBsonObject>(new FBsonObject());
 
+			Object->SetBoolField(TEXT("success"), Success);
+
+			return Object;
+
+		}
 	};
-
+		
 };

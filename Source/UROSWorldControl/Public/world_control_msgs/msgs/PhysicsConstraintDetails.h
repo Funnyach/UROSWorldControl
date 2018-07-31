@@ -1,9 +1,9 @@
 #pragma once
+
 #include "ROSBridgeMsg.h"
-#include "LinearLimits.h"
-#include "AngularLimits.h"
 
-
+#include "world_control_msgs/msgs/LinearLimits.h"
+#include "world_control_msgs/msgs/AngularLimits.h"
 
 namespace world_control_msgs
 {
@@ -18,81 +18,171 @@ namespace world_control_msgs
 		bool ParentDominates;
 		world_control_msgs::LinearLimits LinearLimits;
 		world_control_msgs::AngularLimits AngularLimits;
-
-
 	public:
-		PhysicsConstraintDetails() {}
-
-		PhysicsConstraintDetails(FString InIdFirstModel, FString InIdSecondModel, bool InDisableCollision, bool InEnableProjection, float InProjectionLinearTolerance, float InProjectionAngularTolerance, bool InParentDominates, world_control_msgs::LinearLimits InLinearLimits, world_control_msgs::AngularLimits InAngularLimits)
+		PhysicsConstraintDetails()
 		{
-			PhysicsConstraintDetails();
-			IdFirstModel = InIdFirstModel;
-			IdSecondModel = InIdSecondModel;
-			DisableCollision = InDisableCollision;
-			EnableProjection = InEnableProjection;
-			ProjectionLinearTolerance = InProjectionLinearTolerance;
-			ProjectionAngularTolerance = InProjectionAngularTolerance;
-			ParentDominates = InParentDominates;
-			LinearLimits = InLinearLimits;
-			AngularLimits = InAngularLimits;
+			MsgType = "world_control_msgs/PhysicsConstraintDetails";
 		}
 
-		FString GetIdFirstModel()
+		PhysicsConstraintDetails
+		(
+			FString InIdFirstModel,
+			FString InIdSecondModel,
+			bool InDisableCollision,
+			bool InEnableProjection,
+			float InProjectionLinearTolerance,
+			float InProjectionAngularTolerance,
+			bool InParentDominates,
+			world_control_msgs::LinearLimits InLinearLimits,
+			world_control_msgs::AngularLimits InAngularLimits
+		):
+			IdFirstModel(InIdFirstModel),
+			IdSecondModel(InIdSecondModel),
+			DisableCollision(InDisableCollision),
+			EnableProjection(InEnableProjection),
+			ProjectionLinearTolerance(InProjectionLinearTolerance),
+			ProjectionAngularTolerance(InProjectionAngularTolerance),
+			ParentDominates(InParentDominates),
+			LinearLimits(InLinearLimits),
+			AngularLimits(InAngularLimits)
+		{
+			MsgType = "world_control_msgs/PhysicsConstraintDetails";
+		}
+
+		~PhysicsConstraintDetails() override {}
+
+		FString GetIdFirstModel() const
 		{
 			return IdFirstModel;
 		}
 
-		FString GetIdSecondModel()
+		FString GetIdSecondModel() const
 		{
 			return IdSecondModel;
 		}
 
-		bool GetDisableCollision()
+		bool GetDisableCollision() const
 		{
 			return DisableCollision;
 		}
 
-		bool GetEnableProjection()
+		bool GetEnableProjection() const
 		{
 			return EnableProjection;
 		}
 
-		float GetProjectionLinearTolerance()
+		float GetProjectionLinearTolerance() const
 		{
 			return ProjectionLinearTolerance;
 		}
 
-		float GetProjectionAngularTolerance()
+		float GetProjectionAngularTolerance() const
 		{
 			return ProjectionAngularTolerance;
 		}
 
-		bool GetParentDominates()
+		bool GetParentDominates() const
 		{
 			return ParentDominates;
 		}
 
-		world_control_msgs::LinearLimits GetLinearLimits()
+		world_control_msgs::LinearLimits GetLinearLimits() const
 		{
 			return LinearLimits;
 		}
 
-		world_control_msgs::AngularLimits GetAngularLimits()
+		world_control_msgs::AngularLimits GetAngularLimits() const
 		{
 			return AngularLimits;
 		}
 
+		void SetIdFirstModel(FString InIdFirstModel)
+		{
+			IdFirstModel = InIdFirstModel;
+		}
+
+		void SetIdSecondModel(FString InIdSecondModel)
+		{
+			IdSecondModel = InIdSecondModel;
+		}
+
+		void SetDisableCollision(bool InDisableCollision)
+		{
+			DisableCollision = InDisableCollision;
+		}
+
+		void SetEnableProjection(bool InEnableProjection)
+		{
+			EnableProjection = InEnableProjection;
+		}
+
+		void SetProjectionLinearTolerance(float InProjectionLinearTolerance)
+		{
+			ProjectionLinearTolerance = InProjectionLinearTolerance;
+		}
+
+		void SetProjectionAngularTolerance(float InProjectionAngularTolerance)
+		{
+			ProjectionAngularTolerance = InProjectionAngularTolerance;
+		}
+
+		void SetParentDominates(bool InParentDominates)
+		{
+			ParentDominates = InParentDominates;
+		}
+
+		void SetLinearLimits(world_control_msgs::LinearLimits InLinearLimits)
+		{
+			LinearLimits = InLinearLimits;
+		}
+
+		void SetAngularLimits(world_control_msgs::AngularLimits InAngularLimits)
+		{
+			AngularLimits = InAngularLimits;
+		}
+
 		virtual void FromJson(TSharedPtr<FJsonObject> JsonObject) override
 		{
-			IdFirstModel = JsonObject->GetStringField("id_first_model");
-			IdSecondModel = JsonObject->GetStringField("id_second_model");
-			DisableCollision = JsonObject->GetBoolField("disable_collision");
-			EnableProjection = JsonObject->GetBoolField("enable_projection");
-			ProjectionLinearTolerance = JsonObject->GetNumberField("projection_linear_tolerance");
-			ProjectionAngularTolerance = JsonObject->GetNumberField("projection_angular_tolerance");
-			ParentDominates = JsonObject->GetBoolField("parent_dominates");
-			LinearLimits.FromJson(JsonObject->GetObjectField("linear_limits"));
-			AngularLimits.FromJson(JsonObject->GetObjectField("angular_limits"));
+			IdFirstModel = JsonObject->GetStringField(TEXT("id_first_model"));
+
+			IdSecondModel = JsonObject->GetStringField(TEXT("id_second_model"));
+
+			DisableCollision = JsonObject->GetBoolField(TEXT("disable_collision"));
+
+			EnableProjection = JsonObject->GetBoolField(TEXT("enable_projection"));
+
+			ProjectionLinearTolerance = JsonObject->GetNumberField(TEXT("projection_linear_tolerance"));
+
+			ProjectionAngularTolerance = JsonObject->GetNumberField(TEXT("projection_angular_tolerance"));
+
+			ParentDominates = JsonObject->GetBoolField(TEXT("parent_dominates"));
+
+			LinearLimits = world_control_msgs::LinearLimits::GetFromJson(JsonObject->GetObjectField(TEXT("linear_limits")));
+
+			AngularLimits = world_control_msgs::AngularLimits::GetFromJson(JsonObject->GetObjectField(TEXT("angular_limits")));
+
+		}
+
+		virtual void FromBson(TSharedPtr<FBsonObject> BsonObject) override
+		{
+			IdFirstModel = BsonObject->GetStringField(TEXT("id_first_model"));
+
+			IdSecondModel = BsonObject->GetStringField(TEXT("id_second_model"));
+
+			DisableCollision = BsonObject->GetBoolField(TEXT("disable_collision"));
+
+			EnableProjection = BsonObject->GetBoolField(TEXT("enable_projection"));
+
+			ProjectionLinearTolerance = BsonObject->GetNumberField(TEXT("projection_linear_tolerance"));
+
+			ProjectionAngularTolerance = BsonObject->GetNumberField(TEXT("projection_angular_tolerance"));
+
+			ParentDominates = BsonObject->GetBoolField(TEXT("parent_dominates"));
+
+			LinearLimits = world_control_msgs::LinearLimits::GetFromBson(BsonObject->GetObjectField(TEXT("linear_limits")));
+
+			AngularLimits = world_control_msgs::AngularLimits::GetFromBson(BsonObject->GetObjectField(TEXT("angular_limits")));
+
 		}
 
 		static PhysicsConstraintDetails GetFromJson(TSharedPtr<FJsonObject> JsonObject)
@@ -102,22 +192,17 @@ namespace world_control_msgs
 			return Result;
 		}
 
-		virtual FString ToString() const override
+		static PhysicsConstraintDetails GetFromBson(TSharedPtr<FBsonObject> BsonObject)
 		{
-			return "PhysicsConstraintDetails {id_first_model = " + IdFirstModel +
-				", id_second_model = " + IdSecondModel +
-				", disable_collision = " + (DisableCollision ? FString("True") : FString("False")) +
-				", enable_projection = " + (EnableProjection ? FString("True") : FString("False")) +
-				", projection_linear_tolerance = " + FString::SanitizeFloat(ProjectionLinearTolerance) +
-				", projection_angular_tolerance = " + FString::SanitizeFloat(ProjectionAngularTolerance) +
-				", parent_dominates = " + (ParentDominates ? FString("True") : FString("False")) +
-				", linear_limits = " + LinearLimits.ToString() +
-				", angular_limits = " + AngularLimits.ToString() + "}";
+			PhysicsConstraintDetails Result;
+			Result.FromBson(BsonObject);
+			return Result;
 		}
 
 		virtual TSharedPtr<FJsonObject> ToJsonObject() const override
 		{
 			TSharedPtr<FJsonObject> Object = MakeShareable<FJsonObject>(new FJsonObject());
+
 			Object->SetStringField(TEXT("id_first_model"), IdFirstModel);
 			Object->SetStringField(TEXT("id_second_model"), IdSecondModel);
 			Object->SetBoolField(TEXT("disable_collision"), DisableCollision);
@@ -129,7 +214,21 @@ namespace world_control_msgs
 			Object->SetObjectField(TEXT("angular_limits"), AngularLimits.ToJsonObject());
 			return Object;
 		}
+		virtual TSharedPtr<FBsonObject> ToBsonObject() const override
+		{
+			TSharedPtr<FBsonObject> Object = MakeShareable<FBsonObject>(new FBsonObject());
 
+			Object->SetStringField(TEXT("id_first_model"), IdFirstModel);
+			Object->SetStringField(TEXT("id_second_model"), IdSecondModel);
+			Object->SetBoolField(TEXT("disable_collision"), DisableCollision);
+			Object->SetBoolField(TEXT("enable_projection"), EnableProjection);
+			Object->SetNumberField(TEXT("projection_linear_tolerance"), ProjectionLinearTolerance);
+			Object->SetNumberField(TEXT("projection_angular_tolerance"), ProjectionAngularTolerance);
+			Object->SetBoolField(TEXT("parent_dominates"), ParentDominates);
+			Object->SetObjectField(TEXT("linear_limits"), LinearLimits.ToBsonObject());
+			Object->SetObjectField(TEXT("angular_limits"), AngularLimits.ToBsonObject());
+			return Object;
+		}
 		virtual FString ToYamlString() const override
 		{
 			FString OutputString;
