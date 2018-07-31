@@ -90,8 +90,13 @@ public:
 			return Req;
 		}
 			
-//			### TOSTRING ###
-			
+		FString ToString() const override
+		{
+			return "FROSSetMaterialSrv:Request {id = " + Id +
+				", material_names size = " + FString::FromInt(MaterialNames.Num()) +
+				", material_paths size = " + FString::FromInt(MaterialPaths.Num()) + "}";
+		}
+
 		virtual TSharedPtr<FJsonObject> ToJsonObject() const
 		{
 			TSharedPtr<FJsonObject> Object = MakeShareable<FJsonObject>(new FJsonObject());
@@ -180,8 +185,11 @@ public:
 			return Resp;
 		}			
 			
-//			### TOSTRING ###
-			
+		FString ToString() const override
+		{
+			return "FROSSetMaterialSrv:Response {success = " + (Success ? FString("True") : FString("False")) + "}";
+		}
+
 		virtual TSharedPtr<FJsonObject> ToJsonObject() const
 		{
 			TSharedPtr<FJsonObject> Object = MakeShareable<FJsonObject>(new FJsonObject());

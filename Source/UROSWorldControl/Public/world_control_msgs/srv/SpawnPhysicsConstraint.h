@@ -68,8 +68,12 @@ public:
 			return Req;
 		}
 			
-//			### TOSTRING ###
-			
+		FString ToString() const override
+		{
+			return "FROSSpawnPhysicsConstraintSrv:Request {constraint_details = " + ConstraintDetails.ToString() +
+				", pose = " + Pose.ToString() + "}";
+		}
+
 		virtual TSharedPtr<FJsonObject> ToJsonObject() const
 		{
 			TSharedPtr<FJsonObject> Object = MakeShareable<FJsonObject>(new FJsonObject());
@@ -142,8 +146,11 @@ public:
 			return Resp;
 		}			
 			
-//			### TOSTRING ###
-			
+		FString ToString() const override
+		{
+			return "FROSSpawnPhysicsConstraintSrv:Response {success = " + (Success ? FString("True") : FString("False")) + "}";
+		}
+
 		virtual TSharedPtr<FJsonObject> ToJsonObject() const
 		{
 			TSharedPtr<FJsonObject> Object = MakeShareable<FJsonObject>(new FJsonObject());

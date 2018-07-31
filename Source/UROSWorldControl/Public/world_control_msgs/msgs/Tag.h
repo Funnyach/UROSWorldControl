@@ -95,6 +95,13 @@ namespace world_control_msgs
 			return Result;
 		}
 
+		virtual FString ToString() const override
+		{
+			return "Tag {tag_type = " + TagType +
+				", key = " + Key +
+				", value = " + Value + "}";
+		}
+
 		virtual TSharedPtr<FJsonObject> ToJsonObject() const override
 		{
 			TSharedPtr<FJsonObject> Object = MakeShareable<FJsonObject>(new FJsonObject());

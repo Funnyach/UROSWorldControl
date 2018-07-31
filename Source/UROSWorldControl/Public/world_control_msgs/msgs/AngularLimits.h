@@ -283,6 +283,24 @@ namespace world_control_msgs
 			return Result;
 		}
 
+		virtual FString ToString() const override
+		{
+			return "AngularLimits {swing_1_motion = " + FString::FromInt(Swing1Motion) +
+				", swing_2_motion = " + FString::FromInt(Swing2Motion) +
+				", twist_motion = " + FString::FromInt(TwistMotion) +
+				", swing_1_limit_angle = " + FString::SanitizeFloat(Swing1LimitAngle) +
+				", swing_2_limit_angle = " + FString::SanitizeFloat(Swing2LimitAngle) +
+				", twist_limit_angle = " + FString::SanitizeFloat(TwistLimitAngle) +
+				", angular_roation_offset = " + AngularRoationOffset.ToString() +
+				", use_advanced = " + (UseAdvanced ? FString("True") : FString("False")) +
+				", swing_soft_constraint = " + (SwingSoftConstraint ? FString("True") : FString("False")) +
+				", swing_stiffness = " + FString::SanitizeFloat(SwingStiffness) +
+				", swing_damping = " + FString::SanitizeFloat(SwingDamping) +
+				", twist_soft_constraint = " + (TwistSoftConstraint ? FString("True") : FString("False")) +
+				", twist_stiffness = " + FString::SanitizeFloat(TwistStiffness) +
+				", twist_damping = " + FString::SanitizeFloat(TwistDamping) + "}";
+		}
+
 		virtual TSharedPtr<FJsonObject> ToJsonObject() const override
 		{
 			TSharedPtr<FJsonObject> Object = MakeShareable<FJsonObject>(new FJsonObject());

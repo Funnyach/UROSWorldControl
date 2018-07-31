@@ -180,6 +180,18 @@ namespace world_control_msgs
 			return Result;
 		}
 
+		virtual FString ToString() const override
+		{
+			return "LinearLimits {x_motion = " + FString::FromInt(XMotion) +
+				", y_motion = " + FString::FromInt(YMotion) +
+				", z_motion = " + FString::FromInt(ZMotion) +
+				", limit = " + FString::SanitizeFloat(Limit) +
+				", use_advanced = " + (UseAdvanced ? FString("True") : FString("False")) +
+				", soft_constraint = " + (SoftConstraint ? FString("True") : FString("False")) +
+				", stiffness = " + FString::SanitizeFloat(Stiffness) +
+				", damping = " + FString::SanitizeFloat(Damping) + "}";
+		}
+
 		virtual TSharedPtr<FJsonObject> ToJsonObject() const override
 		{
 			TSharedPtr<FJsonObject> Object = MakeShareable<FJsonObject>(new FJsonObject());

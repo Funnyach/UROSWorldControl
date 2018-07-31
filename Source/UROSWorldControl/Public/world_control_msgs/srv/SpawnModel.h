@@ -163,8 +163,20 @@ public:
 			return Req;
 		}
 			
-//			### TOSTRING ###
-			
+		FString ToString() const override
+		{
+			return "FROSSpawnModelSrv:Request {name = " + Name +
+				", pose = " + Pose.ToString() +
+				", id = " + Id +
+				", tags size = " + FString::FromInt(Tags.Num()) +
+				", path = " + Path +
+				", actor_label = " + ActorLabel +
+				", physics_properties = " + PhysicsProperties.ToString() +
+				", material_names size = " + FString::FromInt(MaterialNames.Num()) +
+				", material_paths size = " + FString::FromInt(MaterialPaths.Num()) +
+				", parent_id = " + ParentId + "}";
+		}
+
 		virtual TSharedPtr<FJsonObject> ToJsonObject() const
 		{
 			TSharedPtr<FJsonObject> Object = MakeShareable<FJsonObject>(new FJsonObject());
@@ -296,8 +308,12 @@ public:
 			return Resp;
 		}			
 			
-//			### TOSTRING ###
-			
+		FString ToString() const override
+		{
+			return "FROSSpawnModelSrv:Response {id = " + Id +
+				", success = " + (Success ? FString("True") : FString("False")) + "}";
+		}
+
 		virtual TSharedPtr<FJsonObject> ToJsonObject() const
 		{
 			TSharedPtr<FJsonObject> Object = MakeShareable<FJsonObject>(new FJsonObject());

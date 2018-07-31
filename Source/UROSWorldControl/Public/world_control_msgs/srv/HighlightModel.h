@@ -118,8 +118,12 @@ public:
 			return Req;
 		}
 			
-//			### TOSTRING ###
-			
+		FString ToString() const override
+		{
+			return "FROSHighlightModelSrv:Request {id = " + Id +
+				", color = " + FString::FromInt(Color) + "}";
+		}
+
 		virtual TSharedPtr<FJsonObject> ToJsonObject() const
 		{
 			TSharedPtr<FJsonObject> Object = MakeShareable<FJsonObject>(new FJsonObject());
@@ -216,8 +220,11 @@ public:
 			return Resp;
 		}			
 			
-//			### TOSTRING ###
-			
+		FString ToString() const override
+		{
+			return "FROSHighlightModelSrv:Response {success = " + (Success ? FString("True") : FString("False")) + "}";
+		}
+
 		virtual TSharedPtr<FJsonObject> ToJsonObject() const
 		{
 			TSharedPtr<FJsonObject> Object = MakeShareable<FJsonObject>(new FJsonObject());
