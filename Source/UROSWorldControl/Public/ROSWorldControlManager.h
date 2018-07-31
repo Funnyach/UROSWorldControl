@@ -16,13 +16,14 @@ class UROSWORLDCONTROL_API ROSWorldControlManager
 {
 public:
 	// Sets default values for this actor's properties
-	ROSWorldControlManager(UWorld* InWorld, FString InServerAdress, int InServerPort, FString InNamespace);
+	ROSWorldControlManager(UWorld* InWorld, FString InServerAdress, int InServerPort, FString InNamespace, ESerializationMode InSerializationMode);
 	~ROSWorldControlManager();
 
 	FString ServerAdress;
 	int ServerPort;
 	FString Namespace;
 	UWorld* World;
+	ESerializationMode SerializationMode;
 
 public:
 	void ConnectToROSBridge(FWebsocketInfoCallBack CustomErrorCallbacks, FWebsocketInfoCallBack CustomConnectedCallbacks);

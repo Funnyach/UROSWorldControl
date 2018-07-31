@@ -29,6 +29,7 @@ public class UROSWorldControlEd : ModuleRules
 			{
 				"Core",
                 "UROSWorldControl",
+                "UROSBridge",
 				// ... add other public dependencies that you statically link with here ...
 			}
 			);

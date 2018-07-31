@@ -26,7 +26,7 @@ public:
 	int ServerPort = 9090;
 
 	UPROPERTY(EditAnywhere, Category = "RosBridge Websocket")
-	ESerializationMode SerializationMode = ESerializationMode::MODE_BSON;
+	ESerializationMode SerializationMode;
 
 	UPROPERTY(EditAnywhere, Category = "ROS")
 	FString Namespace = TEXT("unreal");

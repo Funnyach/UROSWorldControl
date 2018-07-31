@@ -14,7 +14,7 @@ void UUnrealWorldControlEdTool::ConnectToRosBridge()
 	{
 		Controller->DisconnectFromROSBridge();
 	}
-	Controller = new ROSWorldControlManager(World, ServerAdress, ServerPort, Namespace);
+	Controller = new ROSWorldControlManager(World, ServerAdress, ServerPort, Namespace, SerializationMode);
 
 	// Setup Callbacks
 	FWebsocketInfoCallBack ErrorCallback;

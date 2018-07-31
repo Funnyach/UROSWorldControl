@@ -12,12 +12,13 @@
 
 
 ROSWorldControlManager::ROSWorldControlManager(UWorld* InWorld, FString InServerAdress, int InServerPort,
-                                               FString InNamespace)
+                                               FString InNamespace, ESerializationMode InSerializationMode)
 {
 	World = InWorld;
 	ServerAdress = InServerAdress;
 	ServerPort = InServerPort;
 	Namespace = InNamespace;
+	SerializationMode = InSerializationMode;
 }
 
 void ROSWorldControlManager::ConnectToROSBridge(FWebsocketInfoCallBack CustomErrorCallbacks,
@@ -34,7 +35,7 @@ void ROSWorldControlManager::ConnectToROSBridge(FWebsocketInfoCallBack CustomErr
 
 	// Set websocket server address to ws 
 	Handler = MakeShareable<FROSBridgeHandler>(
-		new FROSBridgeHandler(ServerAdress, ServerPort, CustomErrorCallbacks, CustomConnectedCallbacks, ESerializationMode::MODE_BSON));
+		new FROSBridgeHandler(ServerAdress, ServerPort, CustomErrorCallbacks, CustomConnectedCallbacks, SerializationMode));
 
 	// Add servers
 
